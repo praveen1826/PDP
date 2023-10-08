@@ -1,7 +1,9 @@
+import pickle
 import streamlit as st
 import numpy as np
-import streamlit as st
-import pickle
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+
 
 lr_model = "models/LR_model.pkl"
 knn_model = "models/KNN_model.pkl"
@@ -18,7 +20,8 @@ with open(svm_model, 'rb') as file:
 
 st.title("Parkinson's Disease Prediction Using Machine Learning")
 
-st.header('Fill the form and press the predict button to see the result', divider='rainbow')
+st.header('Fill the form and press the predict button to see the result',
+          divider='rainbow')
 
 # test_value = [[ 5.29249395e-01, -1.03309592e-01,  1.11583374e+00,
 #         -5.23716022e-01, -6.82179904e-01, -4.29193964e-01,
@@ -31,7 +34,7 @@ st.header('Fill the form and press the predict button to see the result', divide
 
 
 # Initial values
-initial_values = {   
+initial_values = {
     'MDVP:Fo(Hz)': 119.99200,
     'MDVP:Fhi(Hz)': 157.30200,
     'MDVP:Flo(Hz)': 74.99700,
@@ -56,7 +59,6 @@ initial_values = {
     'PPE': 0.284654
 }
 
-# Create text input fields with initial values
 
 # for key, value in initial_values.items():
 #     st.text_input(key, value=value)
@@ -64,7 +66,7 @@ initial_values = {
 for i, (key, value) in enumerate(initial_values.items()):
     initial_values[key] = st.text_input(key, value=value, key=i)
 
-#print(list(enumerate(initial_values.items())))
+# print(list(enumerate(initial_values.items())))
 
 if st.button('Predict', type="primary"):
     # Get the values from the text input fields
@@ -73,11 +75,16 @@ if st.button('Predict', type="primary"):
 
     # Convert the list of values to a numpy array and store it in 'test_value'
     test_value = np.array(values)
-    
+    sc = StandardScaler()
+
     # Print 'test_value' to the console
-    st.write(test_value)
-    st.write("Logistic Regression",str(LR_model.predict([test_value])))
-    st.write("KNN",str(KNN_model.predict([test_value])))
-    st.write("SVM",str(SVM_model.predict([test_value])))
+    st.write("Logistic Regression", str(
+        LR_model.predict(sc.fit_transform([test_value]))))
+    st.write("KNN", str(KNN_model.predict(sc.fit_transform([test_value]))))
+    st.write("SVM", str(SVM_model.predict(sc.fit_transform([test_value]))))
+    st.write("Provided Data: ", test_value)
 
+dataset = pd.read_csv("dataset/parkinsons.data")
 
+st.subheader('Dataset Sample:', divider='rainbow')
+st.write(dataset.head())
