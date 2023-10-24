@@ -8,6 +8,13 @@ from sklearn.preprocessing import StandardScaler
 lr_model = "models/LR_model.pkl"
 knn_model = "models/KNN_model.pkl"
 svm_model = "models/SVM_model.pkl"
+abc_model = "models/ABC_model.pkl"
+bc_model = "models/BC_model.pkl"
+dt_model = "models/DT_model.pkl"
+lgbm_model = "models/LGBM_model.pkl"
+nb_model = "models/NB_model.pkl"
+rf_model = "models/RF_model.pkl"
+xg_model = "models/XG_model.pkl"
 
 with open(lr_model, 'rb') as file:
     LR_model = pickle.load(file)
@@ -17,6 +24,28 @@ with open(knn_model, 'rb') as file:
 
 with open(svm_model, 'rb') as file:
     SVM_model = pickle.load(file)
+
+with open(abc_model, 'rb') as file:
+    ABC_model = pickle.load(file)
+
+with open(bc_model, 'rb') as file:
+    BC_model = pickle.load(file)
+
+with open(dt_model, 'rb') as file:
+    DT_model = pickle.load(file)
+
+with open(lgbm_model, 'rb') as file:
+    LGBM_model = pickle.load(file)
+
+with open(nb_model, 'rb') as file:
+    NB_model = pickle.load(file)
+
+with open(rf_model, 'rb') as file:
+    RF_model = pickle.load(file)
+
+with open(xg_model, 'rb') as file:
+    XG_model = pickle.load(file)
+
 
 st.title("Parkinson's Disease Prediction Using Machine Learning")
 
@@ -60,9 +89,6 @@ initial_values = {
 }
 
 
-# for key, value in initial_values.items():
-#     st.text_input(key, value=value)
-
 for i, (key, value) in enumerate(initial_values.items()):
     initial_values[key] = st.text_input(key, value=value, key=i)
 
@@ -82,6 +108,20 @@ if st.button('Predict', type="primary"):
         LR_model.predict(sc.fit_transform([test_value]))))
     st.write("KNN", str(KNN_model.predict(sc.fit_transform([test_value]))))
     st.write("SVM", str(SVM_model.predict(sc.fit_transform([test_value]))))
+    st.write("AdaBoost Classifier", str(
+        ABC_model.predict(sc.fit_transform([test_value]))))
+    st.write("Bagging Classifier", str(
+        BC_model.predict(sc.fit_transform([test_value]))))
+    st.write("Decision Tree", str(
+        DT_model.predict(sc.fit_transform([test_value]))))
+    st.write("LightGBM", str(LGBM_model.predict(
+        sc.fit_transform([test_value]))))
+    st.write("Naive Bayes", str(
+        NB_model.predict(sc.fit_transform([test_value]))))
+    st.write("Random Forest", str(
+        RF_model.predict(sc.fit_transform([test_value]))))
+    st.write("XGBoost", str(XG_model.predict(sc.fit_transform([test_value]))))
+
     st.write("Provided Data: ", test_value)
 
 dataset = pd.read_csv("dataset/parkinsons.data")
